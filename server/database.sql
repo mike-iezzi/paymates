@@ -1,33 +1,37 @@
 CREATE DATABASE paymates
 
 CREATE TABLE deals(
-    deal_id SERIAL NOT NULL PRIMARY KEY,
+    deal_id uuid DEFAULT uuid_generate_v4(),
     description VARCHAR(128) NOT NULL,
-    owner_user_id SERIAL NOT NULL,
+    owner_user_id uuid NOT NULL,
     amount NUMERIC(10,2) NOT NULL,
     method VARCHAR(32) NOT NULL,
-    transactions_list SERIAL []
+    transactions_list uuid[],
+    PRIMARY KEY (deal_id)
 );
 
 CREATE TABLE transactions(
-    transaction_id SERIAL NOT NULL PRIMARY KEY,
-    user_id SERIAL NOT NULL,
-    deal_id SERIAL NOT NULL,
+    transaction_id uuid DEFAULT uuid_generate_v4(),
+    user_id uuid NOT NULL,
+    deal_id uuid NOT NULL,
     description VARCHAR(128) NOT NULL
     amount_owed NUMERIC(10,2) NOT NULL,
-    amount_paid NUMERIC(10,2) NOT NULL,  
+    amount_paid NUMERIC(10,2) NOT NULL,
+    PRIMARY KEY (transaction_id)  
 );
 
 CREATE TABLE users(
-    user_id SERIAL NOT NULL PRIMARY KEY,
+    user_id uuid NOT NULL PRIMARY KEY,
     username VARCHAR(32) NOT NULL,
     firstname VARCHAR(32),
     lastname VARCHAR(32),
-    transaction_list SERIAL [],
-    groups_list SERIAL []
+    transaction_list uuid [],
+    groups_list uuid [],
+    PRIMARY KEY (user_id)  
 );
 
 CREATE TABLE groups(
-    group_id SERIAL NOT NULL PRIMARY KEY,
-    users_list SERIAL [],
+    group_id uuid DEFAULT uuid_generate_v4(),
+    users_list uuid [],
+    PRIMARY KEY (group_id)  
 );
