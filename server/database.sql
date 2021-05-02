@@ -14,14 +14,14 @@ CREATE TABLE transactions(
     transaction_id uuid DEFAULT uuid_generate_v4(),
     user_id uuid NOT NULL,
     deal_id uuid NOT NULL,
-    description VARCHAR(128) NOT NULL
+    description VARCHAR(128) NOT NULL,
     amount_owed NUMERIC(10,2) NOT NULL,
     amount_paid NUMERIC(10,2) NOT NULL,
     PRIMARY KEY (transaction_id)  
 );
 
 CREATE TABLE users(
-    user_id uuid NOT NULL PRIMARY KEY,
+    user_id uuid DEFAULT uuid_generate_v4(),
     username VARCHAR(32) NOT NULL,
     firstname VARCHAR(32),
     lastname VARCHAR(32),
@@ -35,3 +35,17 @@ CREATE TABLE groups(
     users_list uuid [],
     PRIMARY KEY (group_id)  
 );
+
+
+INSERT INTO deals (
+    description, 
+    owner_user_id, 
+    amount, 
+    method) 
+VALUES(
+    '2 cases of beer',
+    'a81bc81b-dead-4e5d-abff-90865d1e13b1',
+    60.12,
+    'split evenly, pay within 24 hrs'
+)
+RETURNING *;
