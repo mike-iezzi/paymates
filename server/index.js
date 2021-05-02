@@ -3,20 +3,21 @@ const app = express();
 const cors = require("cors");
 const pool = require("./db");
 
-// //middleware
+// middleware
 app.use(cors());
-app.use(express.json()); //req.body
+app.use(express.json()); 
 
 
-//create a todo
+// create a deal 
 app.post("/deal", async (req, res) => {
   try {
     const params = req.body;
     console.log(params)
-    console.log(params.description)
 
     const new_deal = await pool.query(
-      "INSERT INTO deals (description, owner_user_id, amount, method) VALUES($1, $2, $3, $4)",
+      `INSERT INTO deals 
+      (description, owner_user_id, amount, method) 
+      VALUES($1, $2, $3, $4) RETURNING *`,
       [params.description, params.owner_user_id, params.amount, params.method]
     );
     console.log(new_deal.rows[0])
@@ -27,15 +28,36 @@ app.post("/deal", async (req, res) => {
   }
 });
 
-app.post("/todos", async (req, res) => {
+// get details of a deal 
+app.get("/deal/:id", async (req, res) => {
   try {
-    const { description } = req.body;
-    const newTodo = await pool.query(
-      "INSERT INTO todo (description) VALUES($1) RETURNING *",
-      [description]
-    );
+    const { id } = req.params;
+    console.log(id)
+    const todo = await pool.query("SELECT * FROM deals WHERE deal_id = $1", [
+      id
+    ]);
 
-    res.json(newTodo.rows[0]);
+    res.json(todo.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+// update details of a deal 
+app.put("/deal/:id", async (req, res) => {
+  try {
+    const params = req.body;
+    console.log(params)
+
+    const new_deal = await pool.query(
+      `INSERT INTO deals 
+      (description, owner_user_id, amount, method) 
+      VALUES($1, $2, $3, $4) RETURNING *`,
+      [params.description, params.owner_user_id, params.amount, params.method]
+    );
+    console.log(new_deal.rows[0])
+
+    res.json(new_deal.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
