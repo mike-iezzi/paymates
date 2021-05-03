@@ -49,6 +49,8 @@ app.put("/deal/:id", async (req, res) => {
     const params = req.body;
     console.log(params)
 
+    var query_string = 'UPDATE deal SET'
+
     const new_deal = await pool.query(
       `INSERT INTO deals 
       (description, owner_user_id, amount, method) 
